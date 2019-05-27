@@ -84,7 +84,8 @@ static inline int cirbuf_offer(cirbuf_t *cb,
     written = size < written ? size : written;
     memcpy(cb->data + cb->tail, data, written);
     cb->tail += written;
-    /* TODO: add your code here */
+    if (cb->size < cb->tail)
+        cb->tail %= cb->size;
     return written;
 }
 
@@ -107,8 +108,7 @@ static inline unsigned char *cirbuf_peek(const cirbuf_t *cb)
     if (cirbuf_is_empty(cb))
         return NULL;
 
-    /* TODO: add your own code here */
-    return NULL;
+    return cb->data + cb->head;
 }
 
 /** Release data at the head from the circular buffer.
